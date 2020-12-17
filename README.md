@@ -1,7 +1,8 @@
 # Kotlin DynamoDB Extensions
 
 ![Build](https://github.com/LeoColman/kotlin-dynamodb-extensions/workflows/Build/badge.svg)
-[![GitHub](https://img.shields.io/github/license/LeoColman/kotlin-dynamodb-extensions)](https://github.com/LeoColman/kotlin-dynamodb-extensions/blob/master/LICENSE) [![Maven Central](https://img.shields.io/maven-central/v/group/kotlin-dynamodb-extensions.svg)](https://search.maven.org/search?q=g:group)
+[![GitHub](https://img.shields.io/github/license/LeoColman/kotlin-dynamodb-extensions)](https://github.com/LeoColman/kotlin-dynamodb-extensions/blob/master/LICENSE) 
+[![Maven Central](https://img.shields.io/maven-central/v/br.com.colman.dynamodb/kotlin-dynamodb-extensions)](https://search.maven.org/search?q=g:br.com.colman.dynamodb)
 
 
 Simple library with a collection of Kotlin functions to help you with dealing with DynamoDB, as Java's DSL is very verbose
