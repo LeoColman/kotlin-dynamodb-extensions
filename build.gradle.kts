@@ -25,21 +25,26 @@ plugins {
     id("io.gitlab.arturbosch.detekt").version("1.15.0-RC1")
 }
 
-// FIXME Replace with group
-group = "br.com.colman."
+group = "br.com.colman.dynamodb"
 version = getenv("RELEASE_VERSION") ?: "local"
 
 repositories {
     mavenCentral()
     jcenter()
+    maven(url = "https://s3-us-west-2.amazonaws.com/dynamodb-local/release")
 }
 
 dependencies {
     // Kotest
     testImplementation("io.kotest:kotest-runner-junit5:4.3.2")
+    testImplementation("io.kotest:kotest-property:4.3.2")
     
     // Mockk
     testImplementation("io.mockk:mockk:1.10.3")
+
+    // Dynamo
+    api("com.amazonaws:aws-java-sdk-dynamodb:1.11.908")
+    testImplementation("com.amazonaws:DynamoDBLocal:1.13.5")
 }
 
 tasks.withType<KotlinCompile> {
@@ -48,6 +53,10 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+kotlin {
+    explicitApi()
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
@@ -81,15 +90,15 @@ publishing {
             artifact(javadocJar.get())
 
             pom {
-                name.set("NAME")    // FIXME change name
-                description.set("DESCRIPTION") //FIXME change description
-                url.set("https://www.github.com/LeoColman/repo") // FIXME change URL
+                name.set("kotlin-dynamodb-extensions")
+                description.set("Kotlin extension functions and utilities for DynamoDB")
+                url.set("https://www.github.com/LeoColman/kotlin-dynamodb-extensions/")
 
 
                 scm {
-                    connection.set("scm:git:http://www.github.com/LeoColman/repo") // FIXME change URL
-                    developerConnection.set("scm:git:http://github.com/LeoColman/repo") // FIXME change URL
-                    url.set("https://www.github.com/LeoColman/repo") // FIXME change URL
+                    connection.set("scm:git:http://www.github.com/LeoColman/kotlin-dynamodb-extensions")
+                    developerConnection.set("scm:git:http://github.com/LeoColman")
+                    url.set("https://www.github.com/LeoColman/kotlin-dynamodb-extensions")
                 }
 
                 licenses {
