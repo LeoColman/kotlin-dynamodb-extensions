@@ -14,4 +14,4 @@
  * limitations under the License.
  */
 
-rootProject.name = "colman-oss-template" // FIXME change root project name
+rootProject.name = "kotlin-dynamodb-extensions"
