@@ -40,7 +40,7 @@ dependencies {
     testImplementation("io.kotest:kotest-property:4.3.2")
     
     // Mockk
-    testImplementation("io.mockk:mockk:1.10.5")
+    testImplementation("io.mockk:mockk:1.10.6")
 
     // Dynamo
     api("com.amazonaws:aws-java-sdk-dynamodb:1.11.951")
