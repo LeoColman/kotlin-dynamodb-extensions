@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Leonardo Colman Lopes
+ * Copyright 2021 Leonardo Colman Lopes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either press or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -25,7 +25,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt").version("1.15.0-RC1")
 }
 
-group = "br.com.colman.dynamodb"
+group = "br.com.colman"
 version = getenv("RELEASE_VERSION") ?: "local"
 
 repositories {
@@ -38,12 +38,12 @@ dependencies {
     // Kotest
     testImplementation("io.kotest:kotest-runner-junit5:4.3.2")
     testImplementation("io.kotest:kotest-property:4.3.2")
-    
+
     // Mockk
     testImplementation("io.mockk:mockk:1.10.3")
 
     // Dynamo
-    api("com.amazonaws:aws-java-sdk-dynamodb:1.11.921")
+    api("software.amazon.awssdk:dynamodb-enhanced:2.12.0")
     testImplementation("com.amazonaws:DynamoDBLocal:1.13.5")
 }
 
@@ -124,10 +124,9 @@ val signingKey: String? by project
 val signingPassword: String? by project
 
 signing {
-    useGpgCmd()
     if(signingKey != null && signingPassword != null) {
+        useGpgCmd()
         useInMemoryPgpKeys(signingKey, signingPassword)
+        sign(publishing.publications["mavenJava"])
     }
-
-    sign(publishing.publications["mavenJava"])
 }
