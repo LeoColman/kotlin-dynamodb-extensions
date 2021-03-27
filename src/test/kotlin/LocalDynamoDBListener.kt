@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Leonardo Colman Lopes
+ * Copyright 2021 Leonardo Colman Lopes
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,21 +9,63 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either press or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 package br.com.colman.dynamodb
 
-import com.google.common.base.Splitter
-import com.google.common.collect.Lists
+import com.amazonaws.services.dynamodbv2.local.main.ServerRunner.createServerFromCommandLineArgs
+import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer
+import io.kotest.core.listeners.ProjectListener
 import io.kotest.core.listeners.TestListener
 import io.kotest.core.spec.AutoScan
 import io.kotest.core.spec.Spec
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials.create
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider.create
+import software.amazon.awssdk.regions.Region
+import software.amazon.awssdk.services.dynamodb.DynamoDbClient
+import software.amazon.awssdk.services.dynamodb.model.DeleteTableRequest
 import java.io.File
+import java.net.ServerSocket
+import java.net.URI
 import java.util.Locale
 import java.util.function.Supplier
 import kotlin.reflect.KClass
+
+private lateinit var server: DynamoDBProxyServer
+private var port: Int = -1
+
+val dynamoDbClient by lazy {
+    DynamoDbClient.builder()
+        .endpointOverride(URI("http://localhost:$port"))
+        .region(Region.US_EAST_1)   // Region doesn't matter for local, but it's required for builder
+        .credentialsProvider(create(create("a", "b")))
+        .build()
+}
+
+@AutoScan
+class LocalDynamoDBListener : ProjectListener, TestListener {
+
+    override val name = "LocalDynamoDBSetupListener"
+
+    override suspend fun beforeProject() {
+        port = ServerSocket(0).use { it.localPort }
+        server = createServerFromCommandLineArgs(arrayOf("-inMemory", "-port", "$port"))
+        server.start()
+    }
+
+    override suspend fun afterProject() {
+        server.stop()
+    }
+
+    override suspend fun afterTest(testCase: TestCase, result: TestResult) = dynamoDbClient.listTables().tableNames().forEach {
+        dynamoDbClient.deleteTable(DeleteTableRequest.builder().tableName(it).build())
+    }
+
+}
 
 @AutoScan
 class LocalDynamoDBSetupListener : TestListener {
@@ -38,6 +80,7 @@ class LocalDynamoDBSetupListener : TestListener {
  * Copied from: https://github.com/redskap/aws-dynamodb-java-example-local-testing
  *
  * - Modification: Auto-converted as a Kotlin class
+ * - Modification: getClassPathList - remove google dependencies and use Kotlin StdLib
  */
 private object AwsDynamoDbLocalTestUtils {
     private const val BASE_LIBRARY_NAME = "sqlite4java"
@@ -208,6 +251,6 @@ private object AwsDynamoDbLocalTestUtils {
      * @return The list of each classpath elements.
      */
     fun getClassPathList(classPath: String, pathSeparator: String): List<String> {
-        return Lists.newArrayList(Splitter.on(pathSeparator).split(classPath))
+        return classPath.split(pathSeparator)
     }
 }
