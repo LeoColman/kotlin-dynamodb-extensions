@@ -21,7 +21,7 @@ plugins {
     kotlin("jvm") version "1.4.20"
     `maven-publish`
     signing
-    id("org.jetbrains.dokka") version "1.4.20"
+    id("org.jetbrains.dokka") version "1.5.0"
     id("io.gitlab.arturbosch.detekt").version("1.15.0-RC1")
 }
 
@@ -36,11 +36,11 @@ repositories {
 
 dependencies {
     // Kotest
-    testImplementation("io.kotest:kotest-runner-junit5:4.3.2")
+    testImplementation("io.kotest:kotest-runner-junit5:4.6.1")
     testImplementation("io.kotest:kotest-property:4.3.2")
 
     // Mockk
-    testImplementation("io.mockk:mockk:1.10.3")
+    testImplementation("io.mockk:mockk:1.12.0")
 
     // Dynamo
     api("software.amazon.awssdk:dynamodb-enhanced:2.16.37")
