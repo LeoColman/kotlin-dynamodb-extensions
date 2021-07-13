@@ -44,7 +44,7 @@ dependencies {
 
     // Dynamo
     api("software.amazon.awssdk:dynamodb-enhanced:2.16.100")
-    testImplementation("com.amazonaws:DynamoDBLocal:1.13.5")
+    testImplementation("com.amazonaws:DynamoDBLocal:1.16.0")
 }
 
 tasks.withType<KotlinCompile> {
