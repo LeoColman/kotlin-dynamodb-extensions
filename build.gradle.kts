@@ -43,7 +43,7 @@ dependencies {
     testImplementation("io.mockk:mockk:1.12.0")
 
     // Dynamo
-    api("software.amazon.awssdk:dynamodb-enhanced:2.16.100")
+    api("software.amazon.awssdk:dynamodb-enhanced:2.16.101")
     testImplementation("com.amazonaws:DynamoDBLocal:1.13.5")
 }
 
